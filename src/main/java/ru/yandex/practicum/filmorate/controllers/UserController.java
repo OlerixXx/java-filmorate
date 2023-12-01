@@ -26,6 +26,7 @@ public class UserController {
         users.put(checkedUser.getId(), checkedUser);
         return checkedUser;
     }
+
     @PostMapping("/user")
     public User add(@Valid @RequestBody User user) {
         log.info("Получен запрос!");
