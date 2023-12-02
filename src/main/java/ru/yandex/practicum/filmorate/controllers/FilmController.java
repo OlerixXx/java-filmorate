@@ -8,45 +8,52 @@ import ru.yandex.practicum.filmorate.model.Film;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/films")
 @Slf4j
 public class FilmController {
     private final Map<Integer, Film> films = new HashMap<>();
+    private int id = 1;
 
-    @GetMapping("/films")
-    public Map<Integer, Film> getAll() {
-        return films;
+    @GetMapping
+    public List<Film> getAll() {
+        return new ArrayList<>(films.values());
     }
 
-    @PutMapping("/film")
+    @PutMapping
     public Film update(@Valid @RequestBody Film film) {
         log.info("Получен запрос!");
-        Film checkedFilm = checkValidate(film);
-            films.remove(checkedFilm.getId());
-            films.put(checkedFilm.getId(), checkedFilm);
-        return checkedFilm;
+        if (checkReleaseDate(film) && films.containsKey(film.getId())) {
+            films.remove(film.getId());
+            films.put(film.getId(), film);
+        } else {
+            throw new ValidationException("Такого id не существует!");
+        }
+        return film;
     }
 
-    @PostMapping("/film")
+    @PostMapping
     public Film add(@Valid @RequestBody Film film) {
         log.info("Получен запрос!");
-        films.put(film.getId(), checkValidate(film));
-        return checkValidate(film);
+        film.setId(id);
+        if (checkReleaseDate(film)) {
+            films.put(id, film);
+            id += 1;
+        }
+        return film;
     }
 
-    private Film checkValidate(Film film) {
+    private boolean checkReleaseDate(Film film) {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, Month.DECEMBER, 28))) {
             log.error("Дата релиза указана раньше 28 декабря 1895 года!");
             throw new ValidationException("Дата релиза раньше 28 декабря 1895 года!");
-        } else if (film.getDuration().isNegative()) {
-            log.error("Поле <duration> отрицательное!");
-            throw new ValidationException("Продолжительность фильма должна быть положительной!");
         } else {
-            return film;
+            return true;
         }
     }
-
 }
