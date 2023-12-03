@@ -20,12 +20,13 @@ public class UserController {
 
     @GetMapping
     public List<User> getAll() {
+        log.info("Получен GET запрос - UserController!");
         return new ArrayList<>(users.values());
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user) {
-        log.info("Получен запрос!");
+        log.info("Получен PUT запрос - UserController!");
         if (user.getId() == null || !users.containsKey(user.getId())) {
             throw new ValidationException("Такого id не существует!");
         } else {
@@ -40,7 +41,7 @@ public class UserController {
 
     @PostMapping
     public User add(@Valid @RequestBody User user) {
-        log.info("Получен запрос!");
+        log.info("Получен POST запрос - UserController!");
         user.setId(id);
         if (checkName(user)) {
             user.setName(user.getLogin());

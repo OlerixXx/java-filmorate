@@ -19,15 +19,17 @@ import java.util.Map;
 public class FilmController {
     private final Map<Integer, Film> films = new HashMap<>();
     private int id = 1;
+    private static final LocalDate MIN_DATE = LocalDate.of(1895, Month.DECEMBER, 28);
 
     @GetMapping
     public List<Film> getAll() {
+        log.info("Получен GET запрос - FilmController!");
         return new ArrayList<>(films.values());
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        log.info("Получен запрос!");
+        log.info("Получен PUT запрос - FilmController!");
         if (checkReleaseDate(film) && films.containsKey(film.getId())) {
             films.remove(film.getId());
             films.put(film.getId(), film);
@@ -39,7 +41,7 @@ public class FilmController {
 
     @PostMapping
     public Film add(@Valid @RequestBody Film film) {
-        log.info("Получен запрос!");
+        log.info("Получен POST запрос - FilmController!");
         film.setId(id);
         if (checkReleaseDate(film)) {
             films.put(id, film);
@@ -49,7 +51,7 @@ public class FilmController {
     }
 
     private boolean checkReleaseDate(Film film) {
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, Month.DECEMBER, 28))) {
+        if (film.getReleaseDate().isBefore(MIN_DATE)) {
             log.error("Дата релиза указана раньше 28 декабря 1895 года!");
             throw new ValidationException("Дата релиза раньше 28 декабря 1895 года!");
         } else {
