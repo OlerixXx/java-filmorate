@@ -20,6 +20,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
     private int id = 1;
     private static final LocalDate MIN_DATE = LocalDate.of(1895, Month.DECEMBER, 28);
+
     @Override
     public List<Film> getAll() {
         return new ArrayList<>(films.values());
