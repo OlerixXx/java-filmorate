@@ -59,7 +59,7 @@ public class InMemoryFilmService implements FilmService {
 
     @Override
     public Film addLike(Integer filmId, Integer userId) {
-        if (filmId <=0 || userId <= 0) {
+        if (filmId <= 0 || userId <= 0) {
             throw new ValidationException("Отрицательный ID!");
         } else {
             log.info("Получен PUT запрос - FilmController! Добавление лайка фильму");
