@@ -77,7 +77,7 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public User removeFriend(Integer userId, Integer friendId) {
-        if (userId <=0 || friendId <= 0) {
+        if (userId <= 0 || friendId <= 0) {
             throw new ValidationException("Отрицательный ID!");
         } else {
             log.info("Получен DELETE запрос - UserController! Удаление друга");
@@ -112,7 +112,7 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public List<User> getCommonFriends(Integer userId, Integer otherId) {
-        if (userId <=0 || otherId <= 0) {
+        if (userId <= 0 || otherId <= 0) {
             throw new ValidationException("Отрицательный ID!");
         } else {
             List<User> userFriends = getAllFriends(userId);
