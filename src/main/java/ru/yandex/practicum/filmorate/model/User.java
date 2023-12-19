@@ -20,5 +20,5 @@ public class User {
     private String name;
     @Past (message = "Дата рождения не может быть в будущем.")
     private LocalDate birthday;
-    private List<Integer> friends = new ArrayList<>();
+    private List<Integer> friends;
 }

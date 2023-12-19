@@ -8,6 +8,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,9 +19,6 @@ import java.util.stream.Collectors;
 public class InMemoryUserService implements UserService {
 
     private final UserStorage userStorage;
-    private User user;
-    private User friend;
-    private List<Integer> friendList = new ArrayList<>();
 
     @Override
     public List<User> getAll() {
@@ -61,9 +60,9 @@ public class InMemoryUserService implements UserService {
             throw new ValidationException("Отрицательный ID!");
         } else {
             log.info("Получен POST запрос - UserController! Добавление друга");
-            user = get(userId);
-            friend = get(friendId);
-            friendList = user.getFriends();
+            User user = get(userId);
+            User friend = get(friendId);
+            List<Integer> friendList = user.getFriends();
             friendList.add(friendId);
             user.setFriends(friendList);
             update(user);
@@ -81,9 +80,9 @@ public class InMemoryUserService implements UserService {
             throw new ValidationException("Отрицательный ID!");
         } else {
             log.info("Получен DELETE запрос - UserController! Удаление друга");
-            user = get(userId);
-            friend = get(friendId);
-            friendList = user.getFriends();
+            User user = get(userId);
+            User friend = get(friendId);
+            List<Integer> friendList = user.getFriends();
             friendList.remove(friendId);
             user.setFriends(friendList);
             update(user);
@@ -100,14 +99,13 @@ public class InMemoryUserService implements UserService {
         if (userId <= 0) {
             throw new ValidationException("Отрицательный ID!");
         } else {
-            user = get(userId);
-            friendList = user.getFriends();
+            User user = get(userId);
+            List<Integer> friendList = user.getFriends();
             return friendList.stream()
                     .sorted(Integer::compareTo)
                     .map(this::get)
                     .collect(Collectors.toList());
         }
-
     }
 
     @Override
@@ -117,15 +115,15 @@ public class InMemoryUserService implements UserService {
         } else {
             List<User> userFriends = getAllFriends(userId);
             List<User> otherUserFriends = getAllFriends(otherId);
-
-            return userFriends.stream()
-                    .filter(user -> {
-                        for (User otherUserFriend : otherUserFriends) {
-                            return user.equals(otherUserFriend);
-                        }
-                        return false;
-                    })
-                    .collect(Collectors.toList());
+            List<User> commonFriends = new ArrayList<>();
+            for (User userFriend : userFriends) {
+                for (User otherUserFriend : otherUserFriends) {
+                    if (userFriend.equals(otherUserFriend)) {
+                        commonFriends.add(userFriend);
+                    }
+                }
+            }
+            return commonFriends;
         }
     }
 
