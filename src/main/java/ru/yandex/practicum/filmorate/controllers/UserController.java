@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ErrorResponse;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -68,17 +70,4 @@ public class UserController {
     public List<User> getCommonFriends(@PathVariable Integer userId, @PathVariable Integer otherId) {
         return userService.getCommonFriends(userId, otherId);
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handle(final IncorrectCountException e) {
-        return new ErrorResponse("Некорректно передан параметр <count> или <id>!", e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handle(final ValidationException e) {
-        return new ErrorResponse("Значение по переданным параметрам не найдено!", e.getMessage());
-    }
-
 }

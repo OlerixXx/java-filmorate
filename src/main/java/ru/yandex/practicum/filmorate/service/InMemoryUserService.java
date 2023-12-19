@@ -113,16 +113,8 @@ public class InMemoryUserService implements UserService {
         } else {
             List<User> userFriends = getAllFriends(userId);
             List<User> otherUserFriends = getAllFriends(otherId);
-            List<User> commonFriends = new ArrayList<>();
-            for (User userFriend : userFriends) {
-                for (User otherUserFriend : otherUserFriends) {
-                    if (userFriend.equals(otherUserFriend)) {
-                        commonFriends.add(userFriend);
-                    }
-                }
-            }
-            return commonFriends;
+            userFriends.retainAll(otherUserFriends);
+            return userFriends;
         }
     }
-
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InMemoryFilmService implements FilmService {
 
+    private final UserStorage userStorage;
     private final FilmStorage filmStorage;
     private Film film;
     private List<Integer> likeList;
@@ -64,9 +66,11 @@ public class InMemoryFilmService implements FilmService {
         } else {
             log.info("Получен PUT запрос - FilmController! Добавление лайка фильму");
             film = this.get(filmId);
-            likeList = film.getLikes();
-            likeList.add(userId);
-            update(film);
+            if (userStorage.get(userId) != null) {
+                likeList = film.getLikes();
+                likeList.add(userId);
+                update(film);
+            }
             return film;
         }
     }
@@ -78,9 +82,12 @@ public class InMemoryFilmService implements FilmService {
         } else {
             log.info("Получен DELETE запрос - FilmController! Удаления лайка у фильма");
             film = this.get(filmId);
-            likeList = film.getLikes();
-            likeList.remove(userId);
-            update(film);
+            if (userStorage.get(userId) != null) {
+                likeList = film.getLikes();
+                likeList.remove(userId);
+                update(film);
+                return film;
+            }
             return film;
         }
     }

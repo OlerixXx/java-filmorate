@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 @RequiredArgsConstructor
+@Slf4j
 public class FilmController {
 
     private final FilmService filmService;
@@ -63,17 +65,5 @@ public class FilmController {
     @GetMapping("/popular")
     public List<Film> getCountFilms(@RequestParam(required = false) @DefaultValue(value = "10") Integer count) {
         return filmService.getMostPopular(count);
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handle(final IncorrectCountException e) {
-        return new ErrorResponse("Некорректно передан параметр <count> или <id>!", e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handle(final ValidationException e) {
-        return new ErrorResponse("Значение по переданным параметрам не найдено!", e.getMessage());
     }
 }
