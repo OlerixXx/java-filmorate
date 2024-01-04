@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class User {
@@ -19,5 +20,6 @@ public class User {
     private String name;
     @Past (message = "Дата рождения не может быть в будущем.")
     private LocalDate birthday;
+    private Map<Integer, Boolean> friendStatus;
     private List<Integer> friends;
 }

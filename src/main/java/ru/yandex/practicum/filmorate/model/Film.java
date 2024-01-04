@@ -17,6 +17,8 @@ public class Film {
     @Size(max = 200, message = "Максимальная длина описания — 200 символов")
     private String description;
     private LocalDate releaseDate;
+    private List<Genre> genre;
+    private Rating rating;
     @Positive(message = "Продолжительность фильма должна быть положительной.")
     private int duration;
     private List<Integer> likes = new ArrayList<>();
