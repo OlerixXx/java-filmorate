@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-public enum Rating {
+public enum MPARating {
     G,
     PG,
     PG13,

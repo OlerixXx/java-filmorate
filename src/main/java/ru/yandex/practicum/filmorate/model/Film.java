@@ -18,7 +18,8 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private List<Genre> genre;
-    private Rating rating;
+    private MPARating MPArating;
+    private Integer rating;
     @Positive(message = "Продолжительность фильма должна быть положительной.")
     private int duration;
     private List<Integer> likes = new ArrayList<>();
